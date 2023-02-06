@@ -1,105 +1,48 @@
 import inquirer from "inquirer";
-import {
-  Item,
-  Enemy,
-  Player,
-  Generic,
-} from "./gameGrid.js";
 
-// const grid = [];
-// for (let row = 1; row <= 5; row++) {
-//   for (let col = 1; col <= 10; col++) {
-//     grid.push({
-//       name: `${row},${col}`,
-//       value: `${row}${col}`,
-//       prefix: "🔵 ",
-//     });
-//   }
-// }
-
-// function chooseCell(previousCell) {
-//   const currentRow = previousCell ? Number(previousCell.slice(0, 1)) : 1;
-//   const adjecentCells = grid.filter(
-//     cell =>
-//       (Math.abs(Number(cell.value.slice(0, 1)) - currentRow) === 1 ||
-//         Number(cell.value.slice(0, 1)) === currentRow) &&
-//       (previousCell
-//         ? Math.abs(cell.value.slice(1) - previousCell.slice(1)) === 1
-//         : true)
-//   );
-
-//   inquirer
-//     .prompt([
-//       {
-//         type: "list",
-//         name: "cell",
-//         message: "Select a cell:",
-//         choices: adjecentCells
-//       }
-//     ])
-//     .then(answers => {
-//       console.log("Selected cell:", answers.cell);
-//       chooseCell(answers.cell);
-//     });
-// }
-
-// chooseCell();
-
-class Grid {
-  constructor(row, col, sprite, enemy, item) {
-    this.row = row;
-    this.col = col;
-    this.sprite = sprite;
-    this.enemy = enemy;
-    this.item = item;
+class GridObject {
+  grid = [];
+  constructor(
+    rows,
+    cols,
+    playerLocation,
+    enemyLocation,
+    itemLocation
+  ) {
+    this.rows = rows;
+    this.cols = cols;
+    this.playerLocation = playerLocation;
+    this.enemyLocation = enemyLocation;
+    this.itemLocation = itemLocation;
   }
-  buildGrid() {
-    let grid = "";
-    for (let row = 0; row <= this.row; row++) {
-      for (let col = 0; col <= this.col; col++) {
-        if (row === 0 && col === this.col) {
-          grid += "⭐";
+  createGrid = () => {
+    // const grid = [];
+    for (let row = 0; row <= this.rows; row++) {
+      for (let col = 0; col <= this.cols; col++) {
+        if (row === 0 && col === this.cols - 5) {
+          this.grid.push(" ⭐ ");
         } else {
-          let randomNumber = Math.random();
-          if (randomNumber < 0.33) {
-            grid += "🌳  ";
-          } else if (randomNumber < 0.66) {
-            grid += "🌴  ";
-          } else {
-            grid += "🎄  ";
-          }
+          this.grid.push(" 🎄 ");
         }
       }
-      grid += "\n";
     }
-    console.log(grid);
-  }
+    this.grid.splice(this.playerLocation, 1, " 🏃‍♂️ ");
+    this.grid.splice(this.enemyLocation, 1, " 🧟‍♂️ ");
+    this.grid.splice(this.itemLocation, 1, " ⚔ ");
+    return this.grid;
+  };
 }
 
-const newGrid = new Grid(20, 10);
-const builtGrid = newGrid.buildGrid();
-// console.log(builtGrid);
+const newGrid = new GridObject(5, 9, 11, 13, 12);
+let grids = newGrid.createGrid();
+console.log(grids);
+// createGrid();
 
-const questions = [
-  {
-    type: "list",
-    name: "where",
-    Message: "Move?",
-    choices: [
-      "Move up",
-      "Move down",
-      "Move left",
-      "Move right",
-    ],
-  },
-];
+// grids.splice(8, 0, ["🐾"]);
+// grids.splice(9, 0, ["🐾"]);
+// grids.splice(15, 0, ["🏃‍♂️"]);
+// grids.splice(16, 0, ["🏃‍♂️"]);
+// grids.splice(17, 0, ["🏃‍♂️"]);
+// grids.splice(18, 0, ["🏃‍♂️"]);
 
-async function promptUser() {
-  const answers = await inquirer.prompt(questions);
-  if (answers.where) {
-    builtGrid;
-    promptUser();
-  }
-}
-
-promptUser();
+// console.log(grids);
