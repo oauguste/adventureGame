@@ -1,4 +1,5 @@
-import inquirer from "inquirer";
+// import inquirer from "inquirer";
+// import { Player } from "./playerClass.js";
 
 class GridObject {
   grid = [];
@@ -15,7 +16,7 @@ class GridObject {
     this.enemyLocation = enemyLocation;
     this.itemLocation = itemLocation;
   }
-  createGrid = () => {
+  createGrid = (playerLocation) => {
     // const grid = [];
     for (let row = 0; row <= this.rows; row++) {
       for (let col = 0; col <= this.cols; col++) {
@@ -26,16 +27,19 @@ class GridObject {
         }
       }
     }
-    this.grid.splice(this.playerLocation, 1, " 🏃‍♂️ ");
-    this.grid.splice(this.enemyLocation, 1, " 🧟‍♂️ ");
-    this.grid.splice(this.itemLocation, 1, " ⚔ ");
+    this.grid.splice(playerLocation, 1, " 🏃‍♂️ ");
+    // this.grid.splice(this.enemyLocation, 1, " 🧟‍♂️ ");
+    // this.grid.splice(this.itemLocation, 1, " ⚔ ");
     return this.grid;
   };
 }
 
-const newGrid = new GridObject(5, 9, 11, 13, 12);
-let grids = newGrid.createGrid();
-console.log(grids);
+// const newGrid = new GridObject(5, 9, 11, 13, 12);
+// let grids = newGrid.createGrid();
+// console.log(grids);
+
+// const player = new Player(5, 3, 3, 45);
+// console.log(player);
 // createGrid();
 
 // grids.splice(8, 0, ["🐾"]);
@@ -46,3 +50,5 @@ console.log(grids);
 // grids.splice(18, 0, ["🏃‍♂️"]);
 
 // console.log(grids);
+
+export { GridObject };
