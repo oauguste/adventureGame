@@ -16,7 +16,11 @@ class GridObject {
     this.enemyLocation = enemyLocation;
     this.itemLocation = itemLocation;
   }
-  createGrid = (playerLocation) => {
+  createGrid = (
+    playerLocation,
+    enemyLocation,
+    itemLocation
+  ) => {
     // const grid = [];
     for (let row = 0; row <= this.rows; row++) {
       for (let col = 0; col <= this.cols; col++) {
@@ -28,8 +32,8 @@ class GridObject {
       }
     }
     this.grid.splice(playerLocation, 1, " 🏃‍♂️ ");
-    // this.grid.splice(this.enemyLocation, 1, " 🧟‍♂️ ");
-    // this.grid.splice(this.itemLocation, 1, " ⚔ ");
+    this.grid.splice(enemyLocation, 1, " 🧟‍♂️ ");
+    this.grid.splice(itemLocation, 1, " ⚔ ");
     return this.grid;
   };
 }

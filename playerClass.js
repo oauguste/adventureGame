@@ -1,35 +1,34 @@
 import inquirer from "inquirer";
 import { GridObject } from "./grid.js";
+import { newGrid } from "./gameGrid.js";
 
 class Player extends GridObject {
-  constructor(
-    health,
-    attack,
-    defense,
-    playerLocation,
-    rows,
-    cols,
-    enemyLocation,
-    itemLocation
-  ) {
+  constructor(health, attack, defense, playerLocation) {
     super(
-      rows,
-      cols,
+      newGrid.rows,
+      newGrid.cols,
       playerLocation,
-      enemyLocation,
-      itemLocation
+      newGrid.enemyLocation,
+      newGrid.itemLocation
     );
     this.health = health;
     this.attack = attack;
     this.defense = defense;
     this.playerLocation = playerLocation;
   }
+  // getParentMetaData() {
+  //   console.log(this.rows + this.cols);
+  //   console.log(this.rows + this.cols);
+  //   return this.rows;
+  // }
 
   //player Methods
+  // playerAttack()
   moveRight() {
     if (
-      this.playerLocation + 1 > this.cols * this.rows ||
-      this.playerLocation < 0
+      this.playerLocation + 1 >
+        (this.cols + 1) * (this.rows + 1) - 1 ||
+      this.playerLocation + 1 < 0
     ) {
       return;
     } else {
@@ -38,8 +37,9 @@ class Player extends GridObject {
   }
   moveLeft() {
     if (
-      this.playerLocation - 1 > this.cols * this.rows ||
-      this.playerLocation < 0
+      this.playerLocation - 1 >
+        (this.cols + 1) * (this.rows + 1) - 1 ||
+      this.playerLocation - 1 < 0
     ) {
       return;
     } else {
@@ -48,8 +48,9 @@ class Player extends GridObject {
   }
   moveUp() {
     if (
-      this.playerLocation - 5 > this.cols * this.rows ||
-      this.playerLocation < 0
+      this.playerLocation - 5 >
+        (this.cols + 1) * (this.rows + 1) - 1 ||
+      this.playerLocation - 5 < 0
     ) {
       return;
     } else {
@@ -58,8 +59,9 @@ class Player extends GridObject {
   }
   moveDown() {
     if (
-      this.playerLocation + 5 > 59 ||
-      this.playerLocation < 0
+      this.playerLocation + 5 >
+        (this.cols + 1) * (this.rows + 1) - 1 ||
+      this.playerLocation + 5 < 0
     ) {
       return;
     } else {
