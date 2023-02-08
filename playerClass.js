@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import { GridObject } from "./grid.js";
-import { newGrid } from "./gameGrid.js";
+import { newGrid, item, enemy, grids } from "./gameGrid.js";
 
 class Player extends GridObject {
   constructor(health, attack, defense, playerLocation) {
@@ -8,8 +8,8 @@ class Player extends GridObject {
       newGrid.rows,
       newGrid.cols,
       playerLocation,
-      newGrid.enemyLocation,
-      newGrid.itemLocation
+      enemy.enemyLocation,
+      item.itemLocation
     );
     this.health = health;
     this.attack = attack;

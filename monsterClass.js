@@ -1,6 +1,6 @@
 import { GridObject } from "./grid.js";
 import { newGrid } from "./gameGrid.js";
-import { player, item } from "./gameGrid.js";
+import { player, item, enemy, grids } from "./gameGrid.js";
 
 class Monster extends GridObject {
   constructor(health, attack, defense, enemyLocation) {
@@ -8,8 +8,8 @@ class Monster extends GridObject {
       newGrid.rows,
       newGrid.cols,
       player.playerLocation,
-      enemyLocation,
-      newGrid.itemLocation
+      enemy.enemyLocation,
+      item.itemLocation
     );
     this.health = health;
     this.attack = attack;

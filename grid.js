@@ -1,5 +1,5 @@
 // import inquirer from "inquirer";
-// import { Player } from "./playerClass.js";
+import { player, item, enemy, grids } from "./gameGrid.js";
 
 class GridObject {
   grid = [];
@@ -12,9 +12,9 @@ class GridObject {
   ) {
     this.rows = rows;
     this.cols = cols;
-    this.playerLocation = playerLocation;
-    this.enemyLocation = enemyLocation;
-    this.itemLocation = itemLocation;
+    // this.playerLocation = playerLocation;
+    // this.enemyLocation = enemyLocation;
+    // this.itemLocation = itemLocation;
   }
   createGrid = (
     playerLocation,
