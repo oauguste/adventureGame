@@ -67,6 +67,77 @@ class Player {
     this.sprite = sprite;
     this.location = location;
   }
+  moveRight() {
+    const oldLocation = this.location;
+    if (
+      this.location + 1 < 0 ||
+      this.location + 1 > (grid.col - 1) * grid.row - 1
+    ) {
+      return;
+    } else {
+      this.location = this.location + 1;
+      grid.grid.splice(oldLocation, 1, "🐾");
+      grid.insertPlayer(
+        this.location,
+        zombieLocations,
+        swordLocations
+      );
+    }
+  }
+  moveLeft() {
+    const oldLocation = this.location;
+    if (
+      this.location - 1 >
+        (grid.col + 1) * (grid.row + 1) - 1 ||
+      this.location - 1 < 0
+    ) {
+      return;
+    } else {
+      this.location = this.location - 1;
+      grid.grid.splice(oldLocation, 1, "🐾");
+      grid.insertPlayer(
+        this.location,
+        zombieLocations,
+        swordLocations
+      );
+    }
+  }
+  moveUp() {
+    const oldLocation = this.location;
+    if (
+      this.location - 5 >
+        (grid.col + 1) * (grid.row + 1) - 1 ||
+      this.location - 5 < 0
+    ) {
+      return;
+    } else {
+      this.location = this.location - grid.row + 1;
+      grid.grid.splice(oldLocation, 1, "🐾");
+      grid.insertPlayer(
+        this.location,
+        zombieLocations,
+        swordLocations
+      );
+    }
+  }
+  moveDown() {
+    const oldLocation = this.location;
+    if (
+      this.location + 5 >
+        (grid.col + 1) * (grid.row + 1) - 1 ||
+      this.location + 5 < 0
+    ) {
+      return;
+    } else {
+      this.location = this.location + grid.row + 1;
+      grid.grid.splice(oldLocation, 1, "🐾");
+      grid.insertPlayer(
+        this.location,
+        zombieLocations,
+        swordLocations
+      );
+    }
+  }
 }
 
 class GameGrid {
@@ -93,7 +164,11 @@ class GameGrid {
     let grid = [];
     for (let row = 0; row < this.row; row++) {
       for (let col = 0; col < this.col; col++) {
-        grid.push("🌳");
+        if (row === 0 && col === 7) {
+          grid.push("⭐");
+        } else {
+          grid.push("🌳");
+        }
       }
     }
     // console.log(grid);
@@ -146,11 +221,18 @@ const swordLocations = swords.map(
   (sword) => sword.location
 );
 const grid = new GameGrid(
-  5,
+  8,
   10,
   playerOne.location,
   zombieLocations,
   swordLocations
 );
 // console.log(zombies);
+console.log(grid);
+let playerLocal = playerOne.location;
+console.log(playerLocal);
+playerOne.moveRight();
+console.log(playerLocal);
+playerLocal = playerOne.location;
+console.log(playerLocal);
 console.log(grid);
