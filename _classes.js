@@ -45,14 +45,16 @@ function createMonsters(monster) {
       this.defense = defense;
       this.location = location;
     }
-    attack(target) {
+    attacks(target) {
       const damage = this.attack - target.defense;
       target.health -= damage;
       console.log(
-        `Monster attacks ${
-          target.sprite || "player"
-        } for ${damage} damage.`
+        `Monster attacks ${target.sprite} for ${damage} damage.`
       );
+      if (target.health <= 0) {
+        console.log(`Zombie Slayed ${target.sprite}`);
+        return;
+      }
       // death()
     }
   };
@@ -209,9 +211,9 @@ class GameGrid {
   ) {
     this.grid.splice(playerLocation, 1, playerOne.sprite);
     zombieLocations.forEach((zombie) => {
-      this.grid.splice(zombie, 1, "🧟‍♀️");
+      this.grid.splice(zombie, 1, "🌳");
       swordLocations.forEach((sword) => {
-        this.grid.splice(sword, 1, "⚔");
+        this.grid.splice(sword, 1, "🌳");
       });
     });
   }
@@ -224,7 +226,7 @@ const zombies = [];
 
 for (let i = 0; i < numberOfZombies; i++) {
   const x = Math.floor(Math.random() * 50 + 1);
-  const zombie = new Zombie(10, 5, 25, x);
+  const zombie = new Zombie(50, 100, 25, x);
   zombies.push(zombie);
 }
 
@@ -285,7 +287,11 @@ async function PromptPlayer() {
       },
     ])
     .then(async (answers) => {
-      if (answers.theme === "end Game") {
+      if (
+        answers.theme === "end Game" ||
+        playerOne.location === 6
+      ) {
+        return;
       } else {
         playerChoice(answers);
       }
@@ -305,9 +311,19 @@ PromptPlayer();
 async function gameFlow() {
   for (let i = 0; i < zombies.length; i++) {
     if (playerOne.location === zombies[i].location) {
-      console.log("found zombie");
+      console.log("Player found a zombie");
       playerOne.attacks(zombies[i]);
       console.log(zombies[i].health);
+      if (zombies[i].health >= 0) {
+        zombies[i].attacks(playerOne);
+      }
+      if (zombies[i].health <= 0) {
+        zombies.splice(i, 1);
+      }
+      if (playerOne.health <= 0) {
+        console.log("you died");
+        answers.theme = "end Game";
+      }
     }
   }
 }
@@ -325,7 +341,7 @@ function playerChoice(choices) {
     choiceArray[3]();
   }
   console.log(grid);
-  console.log(`Player' Health is: ${playerOne.health}, 
+  console.log(`  Player' Health is: ${playerOne.health}, 
   Player' Attack is: ${playerOne.attack}, 
   Player' Defense is: ${playerOne.defense}`);
   gameFlow();
@@ -336,9 +352,11 @@ function playerChoice(choices) {
 async function gameFlowSwords() {
   for (let i = 0; i < swords.length; i++) {
     if (playerOne.location === swords[i].location) {
-      console.log("found weapon");
+      console.log("Player found a weapon");
       playerOne.pickupItem(swords[i]);
       console.log(playerOne.attack);
+      swords.splice(i, 1);
+      break;
     }
   }
 }
