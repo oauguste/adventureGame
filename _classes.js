@@ -147,11 +147,14 @@ class Player {
     }
   }
   attacks(target) {
-    const damage = this.attack - target.defense;
+    let damage = this.attack - target.defense;
     target.health -= damage;
     console.log(
       `player attacks ${target.monster} for ${damage} damage`
     );
+    if (target.health <= 0) {
+      console.log(`Player Slayed ${target.monster}`);
+    }
   }
   pickupItem(item) {
     this.health += item.health;
@@ -159,8 +162,8 @@ class Player {
     this.defense += item.defense;
     console.log(
       `player pick up ${item.gear} player's health is now ${this.health}, 
-      player's attack is now ${this.attack},
-       now players defense is now ${this.defense}`
+      player's attack is now ${this.attack}, 
+      players defense is now ${this.defense}`
     );
   }
 }
@@ -221,7 +224,7 @@ const zombies = [];
 
 for (let i = 0; i < numberOfZombies; i++) {
   const x = Math.floor(Math.random() * 50 + 1);
-  const zombie = new Zombie(44, 5, 25, x);
+  const zombie = new Zombie(10, 5, 25, x);
   zombies.push(zombie);
 }
 
@@ -303,6 +306,8 @@ async function gameFlow() {
   for (let i = 0; i < zombies.length; i++) {
     if (playerOne.location === zombies[i].location) {
       console.log("found zombie");
+      playerOne.attacks(zombies[i]);
+      console.log(zombies[i].health);
     }
   }
 }
@@ -320,7 +325,22 @@ function playerChoice(choices) {
     choiceArray[3]();
   }
   console.log(grid);
-  console.log(playerOne.location);
+  console.log(`Player' Health is: ${playerOne.health}, 
+  Player' Attack is: ${playerOne.attack}, 
+  Player' Defense is: ${playerOne.defense}`);
   gameFlow();
+  gameFlowSwords();
   PromptPlayer();
 }
+
+async function gameFlowSwords() {
+  for (let i = 0; i < swords.length; i++) {
+    if (playerOne.location === swords[i].location) {
+      console.log("found weapon");
+      playerOne.pickupItem(swords[i]);
+      console.log(playerOne.attack);
+    }
+  }
+}
+
+// console.log(sword.attack);
