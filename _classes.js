@@ -33,6 +33,9 @@ If the players health gets to zero they DIE and the game ends (is over)
 If the monsters health goes to 0 the are "Defeated" and removed from the square 
 */
 
+import inquirer from "inquirer";
+// import Choice from "inquirer/lib/objects/choice.js";
+
 function createMonsters(monster) {
   return class Monster {
     constructor(health, attack, defense, location) {
@@ -42,8 +45,16 @@ function createMonsters(monster) {
       this.defense = defense;
       this.location = location;
     }
-    // attack()
-    // death()
+    attack(target) {
+      const damage = this.attack - target.defense;
+      target.health -= damage;
+      console.log(
+        `Monster attacks ${
+          target.sprite || "player"
+        } for ${damage} damage.`
+      );
+      // death()
+    }
   };
 }
 
@@ -71,7 +82,7 @@ class Player {
     const oldLocation = this.location;
     if (
       this.location + 1 < 0 ||
-      this.location + 1 > (grid.col - 1) * grid.row - 1
+      this.location + 1 > grid.col * grid.row - 1
     ) {
       return;
     } else {
@@ -87,9 +98,8 @@ class Player {
   moveLeft() {
     const oldLocation = this.location;
     if (
-      this.location - 1 >
-        (grid.col + 1) * (grid.row + 1) - 1 ||
-      this.location - 1 < 0
+      this.location - 1 < 0 ||
+      this.location - 1 > grid.col * grid.row - 1
     ) {
       return;
     } else {
@@ -105,13 +115,12 @@ class Player {
   moveUp() {
     const oldLocation = this.location;
     if (
-      this.location - 5 >
-        (grid.col + 1) * (grid.row + 1) - 1 ||
-      this.location - 5 < 0
+      this.location - 5 < 0 ||
+      this.location - 5 > grid.col * grid.row - 1
     ) {
       return;
     } else {
-      this.location = this.location - grid.row + 1;
+      this.location = this.location - grid.row;
       grid.grid.splice(oldLocation, 1, "🐾");
       grid.insertPlayer(
         this.location,
@@ -123,13 +132,12 @@ class Player {
   moveDown() {
     const oldLocation = this.location;
     if (
-      this.location + 5 >
-        (grid.col + 1) * (grid.row + 1) - 1 ||
-      this.location + 5 < 0
+      this.location + 5 < 0 ||
+      this.location + 5 > grid.col * grid.row - 1
     ) {
       return;
     } else {
-      this.location = this.location + grid.row + 1;
+      this.location = this.location + grid.row;
       grid.grid.splice(oldLocation, 1, "🐾");
       grid.insertPlayer(
         this.location,
@@ -137,6 +145,23 @@ class Player {
         swordLocations
       );
     }
+  }
+  attacks(target) {
+    const damage = this.attack - target.defense;
+    target.health -= damage;
+    console.log(
+      `player attacks ${target.monster} for ${damage} damage`
+    );
+  }
+  pickupItem(item) {
+    this.health += item.health;
+    this.attack += item.attack;
+    this.defense += item.defense;
+    console.log(
+      `player pick up ${item.gear} player's health is now ${this.health}, 
+      player's attack is now ${this.attack},
+       now players defense is now ${this.defense}`
+    );
   }
 }
 
@@ -164,14 +189,14 @@ class GameGrid {
     let grid = [];
     for (let row = 0; row < this.row; row++) {
       for (let col = 0; col < this.col; col++) {
-        if (row === 0 && col === 7) {
+        if (row === 0 && col === this.row - 1) {
           grid.push("⭐");
         } else {
           grid.push("🌳");
         }
       }
     }
-    // console.log(grid);
+
     return grid;
   }
   insertPlayer(
@@ -200,7 +225,6 @@ for (let i = 0; i < numberOfZombies; i++) {
   zombies.push(zombie);
 }
 
-// console.log(zombies);
 const Sword = createItem("Sword");
 const numberOfSwords = Math.floor(Math.random() * 3 + 1);
 const swords = [];
@@ -209,10 +233,8 @@ for (let i = 0; i < numberOfSwords; i++) {
   const sword = new Sword(10, 15, 20, x);
   swords.push(sword);
 }
-// console.log(swords);
 
-const playerOne = new Player(100, 25, 50, "🏃‍♂️", 4);
-// console.log(playerOne);
+const playerOne = new Player(100, 25, 50, "🏃‍♂️", 56);
 
 const zombieLocations = zombies.map(
   (zombie) => zombie.location
@@ -221,18 +243,84 @@ const swordLocations = swords.map(
   (sword) => sword.location
 );
 const grid = new GameGrid(
-  8,
-  10,
+  7,
+  9,
   playerOne.location,
   zombieLocations,
   swordLocations
 );
-// console.log(zombies);
-console.log(grid);
-let playerLocal = playerOne.location;
-console.log(playerLocal);
-playerOne.moveRight();
-console.log(playerLocal);
-playerLocal = playerOne.location;
-console.log(playerLocal);
-console.log(grid);
+
+const choiceArray = [
+  function () {
+    playerOne.moveUp();
+  },
+  function () {
+    playerOne.moveDown();
+  },
+  function () {
+    playerOne.moveLeft();
+  },
+  function () {
+    playerOne.moveRight();
+  },
+];
+
+async function PromptPlayer() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "theme",
+        message: "What do you want to do",
+        choices: [
+          "Go up",
+          "Go Down",
+          "Go left",
+          "Go Right",
+          "end Game",
+        ],
+      },
+    ])
+    .then(async (answers) => {
+      if (answers.theme === "end Game") {
+      } else {
+        playerChoice(answers);
+      }
+    })
+
+    .catch((error) => {
+      if (error.isTtyError) {
+        // Prompt couldn't be rendered in the current environment
+      } else {
+        // Something else went wrong
+      }
+    });
+}
+
+PromptPlayer();
+
+async function gameFlow() {
+  for (let i = 0; i < zombies.length; i++) {
+    if (playerOne.location === zombies[i].location) {
+      console.log("found zombie");
+    }
+  }
+}
+function playerChoice(choices) {
+  if (choices.theme === "Go up") {
+    choiceArray[0]();
+  }
+  if (choices.theme === "Go Down") {
+    choiceArray[1]();
+  }
+  if (choices.theme === "Go left") {
+    choiceArray[2]();
+  }
+  if (choices.theme === "Go Right") {
+    choiceArray[3]();
+  }
+  console.log(grid);
+  console.log(playerOne.location);
+  gameFlow();
+  PromptPlayer();
+}

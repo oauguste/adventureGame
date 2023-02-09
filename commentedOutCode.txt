@@ -1,0 +1,57 @@
+// console.log(zombies);
+
+// console.log(grid);
+// let playerLocal = playerOne.location;
+// console.log(playerLocal);
+// playerOne.moveRight();
+// playerOne.moveRight();
+// playerOne.moveRight();
+// playerOne.moveUp();
+// playerOne.moveUp();
+
+// playerOne.moveRight();
+// console.log(playerLocal);
+// playerLocal = playerOne.location;
+// console.log(playerLocal);
+// console.log(grid);
+// console.log(zombieLocations);
+// console.log(zombies);
+//   if (playerOne.location === zombies[0].location) {
+//     console.log("found zombie");
+//   }
+//   if (playerOne.location === zombies[1].location) {
+//     console.log("found zombie");
+//   }
+//   if (playerOne.location === zombies[2].location) {
+//     console.log("found zombie");
+//   }
+
+// gameFlow();
+// if (answers.theme === "Go up") {
+//   playerOne.moveUp();
+//   console.log(grid);
+//   console.log(playerOne.location);
+//   gameFlow();
+
+// if (answers.theme === "Go Down") {
+//   playerOne.moveDown();
+//   console.log(grid);
+//   console.log(playerOne.location);
+//   gameFlow();
+// }
+
+// if (answers.theme === "Go left") {
+//   playerOne.moveLeft();
+//   console.log(grid);
+//   console.log(playerOne.location);
+//   gameFlow();
+// }
+
+// if (answers.theme === "Go Right") {
+//   playerOne.moveRight();
+//   console.log(grid);
+//   console.log(playerOne.location);
+//   gameFlow();
+// }
+// gameFlow();
+// PromptPlayer();
